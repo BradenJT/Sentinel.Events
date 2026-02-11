@@ -29,23 +29,23 @@ The solution follows **Clean Architecture** (Uncle Bob) principles with clear se
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Sentinel.Api (Presentation)               │
-│  Controllers, Middleware, Configuration, Entry Point         │
+│                    Sentinel.Api (Presentation)              │
+│  Controllers, Middleware, Configuration, Entry Point        │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
-│              Sentinel.Application (Use Cases)                │
-│  Services, DTOs, Interfaces, Business Logic                  │
+│              Sentinel.Application (Use Cases)               │
+│  Services, DTOs, Interfaces, Business Logic                 │
 └────────────────────┬────────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────────┐
-│               Sentinel.Domain (Core)                         │
+│               Sentinel.Domain (Core)                        │
 │  Entities, Enums, Value Objects, Domain Logic               │
 └─────────────────────────────────────────────────────────────┘
                      ▲
 ┌────────────────────┴────────────────────────────────────────┐
-│         Sentinel.Infrastructure (External Concerns)          │
-│  EF Core, Repositories, Background Workers, MQTT Client      │
+│         Sentinel.Infrastructure (External Concerns)         │
+│  EF Core, Repositories, Background Workers, MQTT Client     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
