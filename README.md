@@ -533,7 +533,7 @@ dotnet ef database update PreviousMigrationName --project Sentinel.Infrastructur
 
 ## 👤 Author
 
-**Bradford Eicher**
+**Braden Townsell**
 
 ---
 
