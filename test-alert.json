@@ -1,0 +1,8 @@
+{
+  "deviceId": "1608878c-61a9-455a-b4ad-d51b913a41da",
+  "type": 1,
+  "severity": 2,
+  "message": "High temperature detected: 95°F in Building A, Room 101",
+  "isPublic": true,
+  "metadata": "{\"temperature\": 95, \"threshold\": 85, \"unit\": \"fahrenheit\"}"
+}

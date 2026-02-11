@@ -1,0 +1,8 @@
+{
+  "deviceId": "44e7f9af-00fb-48aa-b854-791314ccfce7",
+  "type": 2,
+  "severity": 3,
+  "message": "Unauthorized motion detected in lobby after hours",
+  "isPublic": true,
+  "metadata": "{\"time\": \"02:48\", \"zone\": \"lobby\", \"cameras\": [\"cam-01\", \"cam-02\"]}"
+}

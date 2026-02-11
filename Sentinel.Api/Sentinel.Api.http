@@ -1,0 +1,171 @@
+@Sentinel.Api_HostAddress = http://localhost:5262
+@ApiKey = test-api-key-12345
+@DeviceId = 1608878c-61a9-455a-b4ad-d51b913a41da
+
+###########################################################
+# SENTINEL.EVENTS API - HTTP REQUESTS
+# Multi-tenant IoT Alert Processing System
+# Authentication: X-API-Key header
+###########################################################
+# Alert Types (integers):
+#   0 = DeviceOffline
+#   1 = TemperatureThreshold
+#   2 = SecurityBreach
+#   3 = FireAlarm
+# Alert Severity (integers):
+#   0 = Low
+#   1 = Medium
+#   2 = High
+#   3 = Critical
+###########################################################
+
+### 1. Provision New Device
+POST {{Sentinel.Api_HostAddress}}/api/devices/provision
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "sensor-fire-001",
+  "name": "Fire Detector - Server Room B-305",
+  "metadata": "{\"floor\":3,\"room\":\"B-305\",\"type\":\"smoke_detector\"}"
+}
+
+### 2. Provision Temperature Sensor
+POST {{Sentinel.Api_HostAddress}}/api/devices/provision
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "sensor-temp-001",
+  "name": "Temperature Sensor - Data Center",
+  "metadata": "{\"location\":\"DC-1\",\"threshold\":75}"
+}
+
+### 3. Provision Motion Detector
+POST {{Sentinel.Api_HostAddress}}/api/devices/provision
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "sensor-motion-001",
+  "name": "Motion Detector - Main Entrance",
+  "metadata": "{\"sensitivity\":\"high\",\"zone\":\"perimeter\"}"
+}
+
+### 4. Create Fire Alert (Type: 3, Severity: 3 - Critical)
+POST {{Sentinel.Api_HostAddress}}/api/alerts
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "{{DeviceId}}",
+  "type": 3,
+  "severity": 3,
+  "message": "Fire detected in server room - immediate evacuation required",
+  "isPublic": true,
+  "metadata": "{\"temperature\":85,\"smoke_level\":\"high\",\"location\":\"Building A, Floor 3\"}"
+}
+
+### 5. Create Temperature Alert (Type: 1, Severity: 2 - High)
+POST {{Sentinel.Api_HostAddress}}/api/alerts
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "{{DeviceId}}",
+  "type": 1,
+  "severity": 2,
+  "message": "Temperature exceeded 80°F in data center",
+  "isPublic": false,
+  "metadata": "{\"temperature\":82,\"threshold\":80,\"unit\":\"fahrenheit\"}"
+}
+
+### 6. Create Security Alert (Type: 2, Severity: 3 - Critical)
+POST {{Sentinel.Api_HostAddress}}/api/alerts
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "{{DeviceId}}",
+  "type": 2,
+  "severity": 3,
+  "message": "Unauthorized access detected at main entrance",
+  "isPublic": true,
+  "metadata": "{\"door\":\"main-entrance\",\"badge_id\":\"unknown\",\"cameras\":[\"cam-01\"]}"
+}
+
+### 7. Get Recent Alerts (Default: 50)
+GET {{Sentinel.Api_HostAddress}}/api/alerts
+X-API-Key: {{ApiKey}}
+
+### 8. Get Alerts with Custom Count
+GET {{Sentinel.Api_HostAddress}}/api/alerts?count=10
+X-API-Key: {{ApiKey}}
+
+### 9. Get Critical Alerts (Severity: 3)
+GET {{Sentinel.Api_HostAddress}}/api/alerts/severity/3
+X-API-Key: {{ApiKey}}
+
+### 10. Get High Severity Alerts (Severity: 2)
+GET {{Sentinel.Api_HostAddress}}/api/alerts/severity/2
+X-API-Key: {{ApiKey}}
+
+### 11. Acknowledge Alert
+@AlertId = 8b338674-3075-4744-ab15-b6b0b8b9ac76
+POST {{Sentinel.Api_HostAddress}}/api/alerts/{{AlertId}}/acknowledge
+X-API-Key: {{ApiKey}}
+
+###########################################################
+# TESTING SCENARIOS
+###########################################################
+
+### Scenario 1: Test Alert Deduplication (send twice within 5 minutes - second should fail)
+POST {{Sentinel.Api_HostAddress}}/api/alerts
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "{{DeviceId}}",
+  "type": 1,
+  "severity": 2,
+  "message": "Temperature exceeded 80°F",
+  "isPublic": false
+}
+
+### Scenario 2: Test Invalid Device (should fail with 400 - device not found)
+POST {{Sentinel.Api_HostAddress}}/api/alerts
+Content-Type: application/json
+X-API-Key: {{ApiKey}}
+
+{
+  "deviceId": "00000000-0000-0000-0000-999999999999",
+  "type": 3,
+  "severity": 3,
+  "message": "This should fail - device doesn't exist"
+}
+
+### Scenario 3: Test Invalid API Key (should fail with 401)
+GET {{Sentinel.Api_HostAddress}}/api/alerts
+X-API-Key: invalid-key-123
+
+### Scenario 4: Test Missing API Key (should fail with 401)
+GET {{Sentinel.Api_HostAddress}}/api/alerts
+
+###########################################################
+# MULTI-TENANT TESTING
+###########################################################
+# Note: To test multi-tenancy, you would need to:
+# 1. Create another tenant in the database with a different API key
+# 2. Use that API key to provision devices and create alerts
+# 3. Verify that each tenant can only see their own data
+###########################################################
+
+### Create Second Tenant (run this SQL in SSMS first):
+# INSERT INTO Tenants (Id, Name, ApiKey, IsActive, CreatedAt)
+# VALUES (NEWID(), 'Second Organization', 'test-api-key-67890', 1, GETDATE())
+
+### Test with Second Tenant's API Key
+@ApiKey_Tenant2 = test-api-key-67890
+
+GET {{Sentinel.Api_HostAddress}}/api/alerts
+X-API-Key: {{ApiKey_Tenant2}}
