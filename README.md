@@ -353,6 +353,13 @@ python automated_demo_multi.py
 ```bash
 python mqtt_test.py
 ```
+**Automated Testing**
+
+MQTT Explorer / Database
+
+<img src="MQTT_Explorer_Automated_Tests_View.gif" alt="MQTT Explorer Demo GIF" width="100%" height="100%"/>
+<img src="Database_Automated_Tests_View.gif" alt="Database Demo GIF" width="100%" height="100%"/>
+
 
 ### API Testing
 
