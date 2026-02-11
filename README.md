@@ -550,6 +550,7 @@ dotnet ef database update PreviousMigrationName --project Sentinel.Infrastructur
 - [Entity Framework Core Documentation](https://docs.microsoft.com/ef/core/)
 - [MQTT Protocol Specification](https://mqtt.org/mqtt-specification/)
 - [Multi-Tenancy in ASP.NET Core](https://docs.microsoft.com/aspnet/core/fundamentals/multi-tenancy)
+- [Claude](https://code.claude.com/docs)
 
 ---
 
